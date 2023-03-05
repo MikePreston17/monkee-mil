@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link 
+    <link
       href="https://cdn.jsdelivr.net/npm/daisyui@2.50.0/dist/full.css"
       rel="stylesheet"
       type="text/css"
@@ -24,14 +24,8 @@
     <title>What's Taters, Precious?</title>
   </head>
   <body>
-    <div
-      x-data="setup()"
-     
-      class="flex flex-col items-center justify-center"
-    >
-      <div 
-      x-bind:data-theme="theme"
-      class="flex flex-center hero min-h-screen bg-base-200">
+    <div x-data="setup()" class="flex flex-col">
+      <div x-bind:data-theme="theme" class="flex hero min-h-screen bg-base-200">
         <div class="hero-content flex-col lg:flex-row-reverse">
           <iframe
             x-show="options.show_potato_day"
@@ -58,21 +52,26 @@
 
             <a>
               <button
-              
                 x-on:click="options.show_ideas_form=true"
-              class="btn btn-primary">Add Idea</button>
+                class="btn btn-primary"
+              >
+                Add Idea
+              </button>
             </a>
 
             <a>
               <button
-              x-on:click="options.show_ideas=true"
-              class="btn btn-primary">See Team Checklist</button>
+                x-on:click="options.show_ideas=true"
+                class="btn btn-primary"
+              >
+                See Team Checklist
+              </button>
             </a>
 
             <template x-if="options.show_ideas_form">
               <div>
                 <iframe
-                  class="airtable-embed"
+                  class="airtable-embed h-screen"
                   src="https://airtable.com/embed/shr58AHc35H8iXGKO?backgroundColor=red"
                   frameborder="0"
                   onmousewheel=""
@@ -86,40 +85,36 @@
             <template x-if="options.show_ideas">
               <div>
                 <iframe
-                  class="airtable-embed"
-                  src="https://airtable.com/embed/shriiAB33SJh93cXZ?backgroundColor=red&viewControls=on"
+                  class="airtable-embed h-screen"
+                  src="https://airtable.com/embed/shriiAB33SJh93cXZ?backgroundColor=red&layout=card&viewControls=on"
                   frameborder="0"
                   onmousewheel=""
-                  width="100%"
-                  height="533"
                   style="background: transparent; border: 1px solid #ccc"
                 ></iframe>
               </div>
             </template>
           </div>
         </div>
+        
+        <div id="options_panel" class="flex flex-col">
+          <!-- NOTE: you can use this panel as a way to degug things -->
 
-        <div class="flex flex-col justify-center">
-          <div id="options_panel" class="flex flex-col">
-            <!-- NOTE: you can use this panel as a way to degug things -->
+          <div id="controls" class="glass p-12 rounded-3xl">
+            <div class="grid grid-cols-3 gap-1 md:grid-cols-1">
+              <template x-for="[key, value] of Object.entries(options)">
+                <label class="cursor-pointer label">
+                  <span x-text="key" class="label-text"></span>
 
-            <div id="controls" class="glass p-12 rounded-3xl">
-              <div class="grid grid-cols-3 gap-1 md:grid-cols-1">
-                <template x-for="[key, value] of Object.entries(options)">
-                  <label class="cursor-pointer label">
-                    <span x-text="key" class="label-text"></span>
-
-                    <input
-                      x-bind:checked="options[key]"
-                      x-on:change="options[key]=!options[key]"
-                      type="checkbox"
-                      class="toggle toggle-primary"
-                    />
-                  </label>
-                </template>
-              </div>
+                  <input
+                    x-bind:checked="options[key]"
+                    x-on:change="options[key]=!options[key]"
+                    type="checkbox"
+                    class="toggle toggle-primary"
+                  />
+                </label>
+              </template>
             </div>
-          </div>
+
 
           <!-- <div class="dropdown dropdown-left dropdown-end">
             <label tabindex="0" class="btn m-1">Theme</label>
@@ -132,7 +127,11 @@
               <li x-on:change="theme='cupcake'"><a>Cupcake</a></li>
             </ul>
           </div> -->
+
+          </div>
+
         </div>
+      
       </div>
     </div>
   </body>
