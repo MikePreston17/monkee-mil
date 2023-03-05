@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html data-theme="halloween" lang="en">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link
+    <link 
       href="https://cdn.jsdelivr.net/npm/daisyui@2.50.0/dist/full.css"
       rel="stylesheet"
       type="text/css"
@@ -23,30 +23,148 @@
 
     <title>What's Taters, Precious?</title>
   </head>
-  <body>    
-    <div x-data="setup()" class="flex flex-col items-center justify-center">
-
-      <div class="flex flex-center hero min-h-screen bg-base-200">
+  <body>
+    <div
+      x-data="setup()"
+     
+      class="flex flex-col items-center justify-center"
+    >
+      <div 
+      x-bind:data-theme="theme"
+      class="flex flex-center hero min-h-screen bg-base-200">
         <div class="hero-content flex-col lg:flex-row-reverse">
-          <iframe width="420" height="746" src="https://www.youtube.com/embed/jOH3r2X_k7U" title="potato day" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          <iframe
+            x-show="options.show_potato_day"
+            width="420"
+            height="746"
+            src="https://www.youtube.com/embed/jOH3r2X_k7U"
+            title="potato day"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
 
           <div>
             <h1 x-text="message" class="text-5xl font-bold"></h1>
-            <p  class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+            <p class="py-6">
+              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
+              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
+              et a id nisi.
+            </p>
 
-            <a href="https://www.youtube.com/shorts/jOH3r2X_k7U">
-                <button class="btn btn-primary">🥔 Go</button>
+            <a x-show="options.show_potato_day">
+              <button class="btn btn-primary">🥔 Go</button>
             </a>
+
+            <a>
+              <button
+              
+                x-on:click="options.show_ideas_form=true"
+              class="btn btn-primary">Add Idea</button>
+            </a>
+
+            <a>
+              <button
+              x-on:click="options.show_ideas=true"
+              class="btn btn-primary">See Team Checklist</button>
+            </a>
+
+            <template x-if="options.show_ideas_form">
+              <div>
+                <iframe
+                  class="airtable-embed"
+                  src="https://airtable.com/embed/shr58AHc35H8iXGKO?backgroundColor=red"
+                  frameborder="0"
+                  onmousewheel=""
+                  width="100%"
+                  height="533"
+                  style="background: transparent; border: 1px solid #ccc"
+                ></iframe>
+              </div>
+            </template>
+
+            <template x-if="options.show_ideas">
+              <div>
+                <iframe
+                  class="airtable-embed"
+                  src="https://airtable.com/embed/shriiAB33SJh93cXZ?backgroundColor=red&viewControls=on"
+                  frameborder="0"
+                  onmousewheel=""
+                  width="100%"
+                  height="533"
+                  style="background: transparent; border: 1px solid #ccc"
+                ></iframe>
+              </div>
+            </template>
           </div>
         </div>
-      </div>   
 
+        <div class="flex flex-col justify-center">
+          <div id="options_panel" class="flex flex-col">
+            <!-- NOTE: you can use this panel as a way to degug things -->
+
+            <div id="controls" class="glass p-12 rounded-3xl">
+              <div class="grid grid-cols-3 gap-1 md:grid-cols-1">
+                <template x-for="[key, value] of Object.entries(options)">
+                  <label class="cursor-pointer label">
+                    <span x-text="key" class="label-text"></span>
+
+                    <input
+                      x-bind:checked="options[key]"
+                      x-on:change="options[key]=!options[key]"
+                      type="checkbox"
+                      class="toggle toggle-primary"
+                    />
+                  </label>
+                </template>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="dropdown dropdown-left dropdown-end">
+            <label tabindex="0" class="btn m-1">Theme</label>
+            <ul
+              tabindex="0"
+              class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              <li x-on:change="theme='cupcake'"><a>Halloween</a></li>
+              <li x-on:change="theme='cupcake'"><a>Dracula</a></li>
+              <li x-on:change="theme='cupcake'"><a>Cupcake</a></li>
+            </ul>
+          </div> -->
+        </div>
+      </div>
     </div>
   </body>
+
   <script>
+    /**
+    Quick guide:
+    All variables inside the return {} are treated as 'reactive' by [AlpineJS]()
+     */
+
+    const regex_patterns = {
+      "docker-compose": {
+        find: "volumes:.[%5Cs|%5Cn|%5Cr]+((-%5Cs+[%5C-_%5C./a-zA-Z%5Cd:]+)[%5Cs|%5Cn|%5Cr])*",
+      },
+    };
+
     function setup() {
       return {
-        message: "Have a Potato Day! 🥔 ",
+        get message() {
+          this.options.show_potato_day
+            ? "Welcome, Monkee! 🍌"
+            : "Have a Potato Day! 🥔 ";
+        },
+
+        options: {
+          // keep_history: true,
+          show_ideas_form: false,
+          show_ideas: false,
+          show_potato_day: false,
+        },
+
+        theme: "halloween",
       };
     }
   </script>
